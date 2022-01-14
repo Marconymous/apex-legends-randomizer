@@ -1,4 +1,4 @@
-import java.io.FileWriter
+import java.io.File
 import kotlin.system.exitProcess
 
 fun main() {
@@ -56,15 +56,17 @@ object LegendGenerator {
     }
 
     private fun saveLegends() {
-        val fw = FileWriter(this::class.java.getResource("selected-legends.dat")?.file ?: run { error("Could not file File to save legends!"); })
+        val fileName = object {}.javaClass.getResource("selected-legends.dat")?.file ?: ""
 
-        selectedLegends.forEach {
-            println("saving -> $it")
-            fw.append(it + "\n")
+        if (fileName == "") {
+            error("Could not save file!")
         }
 
-        fw.flush()
-        fw.close()
+        val file = File(fileName)
+
+        val text = selectedLegends.reduce{acc, s -> acc + "\n$s" }
+        println(text)
+        file.writeText(text)
     }
 
     private fun resetLegends() {
